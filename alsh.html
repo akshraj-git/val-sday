@@ -1,1 +1,214 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aashi 💖 Be My Valentine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffdde1, #fccb90);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+
+        .box {
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            margin: 10px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #yesBtn {
+            background-color: #ff4081;
+            color: white;
+        }
+
+        #noBtn {
+            background-color: white;
+            color: #ff4081;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
+        .falling {
+            position: absolute;
+            font-size: 30px;
+            animation: fall 3s linear;
+        }
+
+        @keyframes fall {
+            from { top: -50px; }
+            to { top: 100vh; }
+        }
+
+        .firework {
+            position: absolute;
+            font-size: 30px;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {transform: scale(0);}
+            100% {transform: scale(3); opacity: 0;}
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="bemybaby.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="box" id="gameScreen">
+        <h1>Pop 6 Hearts to Unlock 💕</h1>
+        <h2 id="score">Score: 0</h2>
+    </div>
+
+    <div class="box" id="proposalScreen" style="display:none;">
+        <h1>Aashi 💖</h1>
+        <h2>Will You Be My Valentine? 🌹</h2>
+
+        <button id="yesBtn">YES 💘</button>
+        <button id="noBtn">NO 💔</button>
+
+        <h3 id="message"></h3>
+    </div>
+
+    <script>
+
+        let score = 0;
+        const music = document.getElementById("bgMusic");
+
+        const gameScreen = document.getElementById("gameScreen");
+        const proposalScreen = document.getElementById("proposalScreen");
+        const scoreText = document.getElementById("score");
+
+        function createHeart() {
+            let heart = document.createElement("div");
+            heart.innerHTML = "💖";
+            heart.className = "heart";
+
+            heart.style.left = Math.random() * 90 + "vw";
+            heart.style.top = Math.random() * 80 + "vh";
+
+            document.body.appendChild(heart);
+
+            heart.onclick = function() {
+                score++;
+                scoreText.innerText = "Score: " + score;
+                heart.remove();
+
+                if (score == 6) {
+                    gameScreen.style.display = "none";
+                    proposalScreen.style.display = "block";
+                    music.play();
+                }
+            }
+        }
+
+        for (let i = 0; i < 6; i++) {
+            createHeart();
+        }
+
+        document.getElementById("yesBtn").onclick = function() {
+            document.getElementById("message").innerText =
+                "She said YESSSS 😭💖 I love you Aashi 💕";
+
+            for (let i = 0; i < 30; i++) {
+                let fire = document.createElement("div");
+                fire.innerHTML = "✨";
+                fire.className = "firework";
+                fire.style.left = Math.random() * 100 + "vw";
+                fire.style.top = Math.random() * 100 + "vh";
+
+                document.body.appendChild(fire);
+
+                setTimeout(() => {
+                    fire.remove();
+                }, 1000);
+            }
+        };
+
+        const noBtn = document.getElementById("noBtn");
+        let noClickCount = 0;
+
+        noBtn.onclick = function() {
+
+            noClickCount++;
+
+            document.getElementById("message").innerText =
+                "Invalid Selection Aashi 💔";
+
+            document.getElementById("message").style.fontSize =
+                (18 + noClickCount * 6) + "px";
+
+            noBtn.style.transform =
+                "scale(" + (1 - noClickCount * 0.1) + ")";
+
+            document.body.style.animation = "shake 0.3s";
+            setTimeout(() => {
+                document.body.style.animation = "";
+            }, 300);
+
+            for (let i = 0; i < 25; i++) {
+                let broken = document.createElement("div");
+                broken.innerHTML = "💔";
+                broken.className = "falling";
+                broken.style.left = Math.random() * 100 + "vw";
+
+                document.body.appendChild(broken);
+
+                setTimeout(() => {
+                    broken.remove();
+                }, 3000);
+            }
+
+            if (noClickCount == 3) {
+                noBtn.innerText = "Are you sure? 🥺";
+            }
+
+            if (noClickCount == 5) {
+                noBtn.innerText = "Okay fine… click YES 😌";
+                noBtn.style.backgroundColor = "#ff4081";
+                noBtn.style.color = "white";
+            }
+        };
+
+    </script>
+
+</body>
+</html>
